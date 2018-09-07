@@ -123,5 +123,8 @@
       }
     }
   },
-  "defaultProject": "payroll"
+  "defaultProject": "payroll",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
