@@ -1,13 +1,17 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {PayrollEntry} from "../models/payroll-entry";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PayrollService {
 
-  constructor() { }
+  constructor(private http: HttpClient) {
+  }
 
-  loadPayroll() {
-    console.log("load");
+  loadPayroll(): Observable<PayrollEntry[]> {
+    return this.http.get<PayrollEntry[]>("http://localhost:8080/api/payroll")
   }
 }

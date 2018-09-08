@@ -1,16 +1,27 @@
 import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType, ROOT_EFFECTS_INIT} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {PayrollService} from "./payroll-report/payroll.service";
-import {map, tap} from "rxjs/operators";
+import {map, switchMap} from "rxjs/operators";
 import {defer, Observable, of} from "rxjs";
+import {LoadPayroll, LoadPayrollsSuccess, PayrollActionTypes} from "./actions/payroll.actions";
 
 
 @Injectable()
 export class AppEffects {
-  @Effect({dispatch: false})
-  init$: Observable<any> = defer(() => of(null)).pipe(
-    tap(() => this.payrollService.loadPayroll())
+
+  @Effect()
+  loadPayroll$ = this.actions$.pipe(
+    ofType<LoadPayroll>(PayrollActionTypes.LoadPayroll),
+    switchMap(() => {
+      return this.payrollService.loadPayroll()
+        .pipe(
+          map(() => new LoadPayrollsSuccess())
+        )
+    })
   );
+
+  @Effect()
+  init$: Observable<LoadPayroll> = defer(() => of(new LoadPayroll()));
 
   constructor(private actions$: Actions, private payrollService: PayrollService) {
   }
